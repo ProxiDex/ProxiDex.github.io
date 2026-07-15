@@ -530,6 +530,125 @@
       margin-bottom: 1.5rem !important;
     }
 
+
+    /* Quantitative results table */
+    .results-section {
+      padding-top: 3.5rem;
+      padding-bottom: 4rem;
+      background: #f7f7f7;
+    }
+
+    .results-main-title {
+      margin-bottom: 2.75rem !important;
+    }
+
+    .simulation-results-block {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .simulation-results-title {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .results-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 0.35rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .simulation-results-table {
+      width: 100%;
+      min-width: 1120px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      border-top: 2px solid #363636;
+      border-bottom: 2px solid #363636;
+      background: #ffffff;
+      color: #363636;
+      font-size: 0.78rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .simulation-results-table caption {
+      caption-side: top;
+      max-width: 1120px;
+      margin: 0 auto 1rem;
+      color: #4a4a4a;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .simulation-results-table th,
+    .simulation-results-table td {
+      padding: 0.62rem 0.45rem;
+      border-bottom: 1px solid #dbdbdb;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .simulation-results-table thead th {
+      background: #f3f3f3;
+      color: #242424;
+      font-weight: 700;
+    }
+
+    .simulation-results-table thead tr:first-child th {
+      border-bottom: 1px solid #7a7a7a;
+    }
+
+    .simulation-results-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .simulation-results-table tbody tr:hover td {
+      background: #fafafa;
+    }
+
+    .simulation-results-table .algorithm-column {
+      min-width: 145px;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      border-right: 1px solid #7a7a7a;
+      text-align: left;
+    }
+
+    .simulation-results-table thead .algorithm-column {
+      text-align: center;
+    }
+
+    .simulation-results-table .group-end {
+      border-right: 1px solid #7a7a7a;
+    }
+
+    .simulation-results-table .best-result {
+      background: #e8e8e8;
+      font-weight: 700;
+    }
+
+    .simulation-results-table tbody tr:hover .best-result {
+      background: #dddddd;
+    }
+
+    .simulation-results-table .ours-row td {
+      border-top: 1.5px solid #7a7a7a;
+    }
+
+    .simulation-results-table .ours-name {
+      font-weight: 700;
+    }
+
+    .results-scroll-hint {
+      display: none;
+      margin-top: 0.65rem;
+      color: #7a7a7a;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
     @media screen and (max-width: 1024px) {
       .task-video-columns.is-three-columns,
       .task-video-columns.is-four-columns {
@@ -538,8 +657,23 @@
     }
 
     @media screen and (max-width: 600px) {
-      .interaction-pointcloud-title {
+      .interaction-pointcloud-title,
+      .results-main-title {
         font-size: 2rem !important;
+      }
+
+      .simulation-results-title {
+        font-size: 1.55rem !important;
+      }
+
+      .simulation-results-table caption {
+        padding: 0 0.25rem;
+        font-size: 0.9rem;
+        text-align: left;
+      }
+
+      .results-scroll-hint {
+        display: block;
       }
 
       .task-video-columns.is-three-columns,
@@ -748,7 +882,7 @@
           <div class="task-video-stack">
             <div class="task-video-frame">
               <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Simulator teleoperation: Driller">
-                <source data-src="static/videos/SimTask2-1.mp4" type="video/mp4">
+                <source data-src="static/videos/SimTask2_1.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -1088,6 +1222,125 @@
   </div>
 </section>
 <!-- End interaction point cloud visualization -->
+
+
+<!-- Quantitative results -->
+<section class="section results-section" id="results">
+  <div class="container is-widescreen">
+    <h2 class="title is-2 has-text-centered results-main-title">Result</h2>
+
+    <div class="simulation-results-block" id="simulation-results">
+      <h3 class="title is-3 has-text-centered simulation-results-title">Results in Simulation</h3>
+
+      <div class="results-table-wrapper" role="region" aria-label="Simulation benchmark results" tabindex="0">
+        <table class="simulation-results-table">
+          <caption>
+            Simulation results on dexterous manipulation benchmarks. We evaluate all methods on Adroit, DexArt, and three self-designed IsaacLab tasks.
+          </caption>
+          <thead>
+            <tr>
+              <th class="algorithm-column" rowspan="2" scope="col">Algorithm\Tasks</th>
+              <th colspan="3" scope="colgroup" class="group-end">Adroit</th>
+              <th colspan="4" scope="colgroup" class="group-end">DexArt</th>
+              <th colspan="3" scope="colgroup" class="group-end">Self-Designed</th>
+              <th rowspan="2" scope="col">Avg.</th>
+            </tr>
+            <tr>
+              <th scope="col">Hammer</th>
+              <th scope="col">Door</th>
+              <th scope="col" class="group-end">Pen</th>
+              <th scope="col">Laptop</th>
+              <th scope="col">Faucet</th>
+              <th scope="col">Toilet</th>
+              <th scope="col" class="group-end">Bucket</th>
+              <th scope="col">Box</th>
+              <th scope="col">Driller</th>
+              <th scope="col" class="group-end">Banana</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="algorithm-column">DP3</td>
+              <td class="best-result">100.0&plusmn;0.0</td>
+              <td>76.7&plusmn;4.7</td>
+              <td class="group-end">56.7&plusmn;2.6</td>
+              <td>89.7&plusmn;0.9</td>
+              <td>41.7&plusmn;0.5</td>
+              <td>79.7&plusmn;0.9</td>
+              <td class="group-end">31.3&plusmn;0.5</td>
+              <td>90.3&plusmn;3.2</td>
+              <td>74.3&plusmn;2.6</td>
+              <td class="group-end">77.8&plusmn;1.2</td>
+              <td>71.8&plusmn;1.7</td>
+            </tr>
+
+            <tr>
+              <td class="algorithm-column">ManiFlow</td>
+              <td class="best-result">100.0&plusmn;0.0</td>
+              <td>80.3&plusmn;1.2</td>
+              <td class="group-end">55.5&plusmn;5.8</td>
+              <td class="best-result">93.0&plusmn;1.6</td>
+              <td>45.0&plusmn;3.6</td>
+              <td>79.9&plusmn;3.3</td>
+              <td class="group-end">35.3&plusmn;2.1</td>
+              <td>94.7&plusmn;2.1</td>
+              <td>78.6&plusmn;1.4</td>
+              <td class="group-end">79.8&plusmn;2.3</td>
+              <td>74.2&plusmn;2.3</td>
+            </tr>
+
+            <tr>
+              <td class="algorithm-column">AFRO</td>
+              <td>96.0&plusmn;2.8</td>
+              <td>83.8&plusmn;3.4</td>
+              <td class="group-end">72.3&plusmn;2.1</td>
+              <td>86.3&plusmn;2.5</td>
+              <td>42.3&plusmn;1.8</td>
+              <td>82.2&plusmn;3.4</td>
+              <td class="group-end">48.0&plusmn;2.3</td>
+              <td class="best-result">97.2&plusmn;1.3</td>
+              <td>79.4&plusmn;1.5</td>
+              <td class="group-end">81.4&plusmn;1.8</td>
+              <td>76.9&plusmn;2.3</td>
+            </tr>
+
+            <tr>
+              <td class="algorithm-column">CordViP</td>
+              <td>96.0&plusmn;2.1</td>
+              <td>84.7&plusmn;1.7</td>
+              <td class="group-end">76.2&plusmn;3.2</td>
+              <td>92.6&plusmn;2.1</td>
+              <td class="best-result">56.5&plusmn;1.3</td>
+              <td>81.0&plusmn;2.2</td>
+              <td class="group-end">57.0&plusmn;1.6</td>
+              <td>96.3&plusmn;2.0</td>
+              <td>85.3&plusmn;1.1</td>
+              <td class="group-end">84.7&plusmn;1.6</td>
+              <td>81.0&plusmn;1.9</td>
+            </tr>
+
+            <tr class="ours-row">
+              <td class="algorithm-column ours-name">ProxiDex (Ours)</td>
+              <td class="best-result">100.0&plusmn;0.0</td>
+              <td class="best-result">86.5&plusmn;1.9</td>
+              <td class="best-result group-end">84.3&plusmn;2.4</td>
+              <td class="best-result">93.0&plusmn;1.2</td>
+              <td>53.4&plusmn;2.1</td>
+              <td class="best-result">84.3&plusmn;2.3</td>
+              <td class="best-result group-end">64.0&plusmn;3.2</td>
+              <td>96.7&plusmn;1.6</td>
+              <td class="best-result">89.2&plusmn;2.0</td>
+              <td class="best-result group-end">87.3&plusmn;1.5</td>
+              <td class="best-result">83.9&plusmn;1.8</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="results-scroll-hint" aria-hidden="true">Swipe horizontally to view the complete table.</p>
+    </div>
+  </div>
+</section>
+<!-- End quantitative results -->
 
 
 
