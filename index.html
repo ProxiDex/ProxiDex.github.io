@@ -548,6 +548,88 @@
         transition: none;
       }
     }
+
+    /* Interaction point cloud visualization benchmark grids */
+    .interaction-pointcloud-section {
+      padding-top: 3rem;
+      padding-bottom: 3.75rem;
+    }
+
+    .interaction-pointcloud-title {
+      margin-bottom: 3rem !important;
+    }
+
+    .benchmark-visualization-group {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .benchmark-visualization-group + .benchmark-visualization-group {
+      margin-top: 4rem;
+      padding-top: 3.25rem;
+      border-top: 1px solid #dbdbdb;
+    }
+
+    .benchmark-visualization-subtitle {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .benchmark-video-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .benchmark-video-grid.is-three-columns {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .benchmark-video-grid.is-four-columns {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .benchmark-video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000;
+      box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
+    }
+
+    .benchmark-video-frame video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    @media screen and (max-width: 1024px) {
+      .benchmark-video-grid.is-three-columns,
+      .benchmark-video-grid.is-four-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .interaction-pointcloud-title {
+        font-size: 2rem !important;
+      }
+
+      .benchmark-video-grid.is-three-columns,
+      .benchmark-video-grid.is-four-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .benchmark-video-frame {
+        aspect-ratio: 4 / 3;
+      }
+    }
+
   </style>
 
 </head>
@@ -833,6 +915,161 @@
   </div>
 </section>
 <!-- End teleoperation videos -->
+
+<!-- Interaction point cloud visualization -->
+<section class="section interaction-pointcloud-section" id="interaction-pointcloud-visualization">
+  <div class="container is-widescreen">
+    <h2 class="title is-2 has-text-centered interaction-pointcloud-title">
+      Interaction Point Cloud Visualization
+    </h2>
+
+    <!-- Adroit -->
+    <div class="benchmark-visualization-group" id="adroit-visualization">
+      <h3 class="title is-3 has-text-centered benchmark-visualization-subtitle">Adroit</h3>
+      <div class="benchmark-video-grid is-three-columns">
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 1">
+            <source data-src="static/videos/benchmark1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 2">
+            <source data-src="static/videos/benchmark2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 3">
+            <source data-src="static/videos/benchmark3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 1 alternative view">
+            <source data-src="static/videos/benchmark1-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 2 alternative view">
+            <source data-src="static/videos/benchmark2-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Adroit benchmark 3 alternative view">
+            <source data-src="static/videos/benchmark3-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- End Adroit -->
+
+    <!-- DexArt -->
+    <div class="benchmark-visualization-group" id="dexart-visualization">
+      <h3 class="title is-3 has-text-centered benchmark-visualization-subtitle">DexArt</h3>
+      <div class="benchmark-video-grid is-four-columns">
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 4">
+            <source data-src="static/videos/benchmark4.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 5">
+            <source data-src="static/videos/benchmark5.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 6">
+            <source data-src="static/videos/benchmark6.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 7">
+            <source data-src="static/videos/benchmark7.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 4 alternative view">
+            <source data-src="static/videos/benchmark4-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 5 alternative view">
+            <source data-src="static/videos/benchmark5-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 6 alternative view">
+            <source data-src="static/videos/benchmark6-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="DexArt benchmark 7 alternative view">
+            <source data-src="static/videos/benchmark7-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- End DexArt -->
+
+    <!-- Real-World -->
+    <div class="benchmark-visualization-group" id="realworld-pointcloud-visualization">
+      <h3 class="title is-3 has-text-centered benchmark-visualization-subtitle">Real-World</h3>
+      <div class="benchmark-video-grid is-three-columns">
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 8">
+            <source data-src="static/videos/benchmark8.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 9">
+            <source data-src="static/videos/benchmark9.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 10">
+            <source data-src="static/videos/benchmark10.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 8 alternative view">
+            <source data-src="static/videos/benchmark8-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 9 alternative view">
+            <source data-src="static/videos/benchmark9-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="benchmark-video-frame">
+          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world benchmark 10 alternative view">
+            <source data-src="static/videos/benchmark10-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- End Real-World -->
+  </div>
+</section>
+<!-- End interaction point cloud visualization -->
+
 
 
 
@@ -1165,6 +1402,79 @@
 
     showSlide(0, false);
     startAutoplay();
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const benchmarkVideos = Array.from(document.querySelectorAll('.benchmark-lazy-video'));
+
+    if (!benchmarkVideos.length) {
+      return;
+    }
+
+    function loadBenchmarkVideo(video) {
+      if (!video || video.dataset.loaded === 'true') {
+        return;
+      }
+
+      const source = video.querySelector('source[data-src]');
+      if (!source) {
+        return;
+      }
+
+      source.src = source.dataset.src;
+      source.removeAttribute('data-src');
+      video.dataset.loaded = 'true';
+      video.preload = 'metadata';
+      video.load();
+    }
+
+    if ('IntersectionObserver' in window) {
+      const loadObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          loadBenchmarkVideo(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, {
+        rootMargin: '350px 0px',
+        threshold: 0.01
+      });
+
+      const pauseObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting && !entry.target.paused) {
+            entry.target.pause();
+          }
+        });
+      }, {
+        threshold: 0
+      });
+
+      benchmarkVideos.forEach(function (video) {
+        loadObserver.observe(video);
+        pauseObserver.observe(video);
+      });
+    } else {
+      benchmarkVideos.forEach(loadBenchmarkVideo);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) {
+        return;
+      }
+
+      benchmarkVideos.forEach(function (video) {
+        if (!video.paused) {
+          video.pause();
+        }
+      });
+    });
   });
 </script>
 
