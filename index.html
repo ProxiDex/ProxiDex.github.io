@@ -186,6 +186,30 @@
       padding-bottom: 3rem;
     }
 
+    .teleoperation-group-section {
+      padding-top: 3rem;
+      padding-bottom: 3.5rem;
+    }
+
+    .teleoperation-group-title {
+      margin-bottom: 2.75rem !important;
+    }
+
+    .teleoperation-subsection {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .teleoperation-subsection + .teleoperation-subsection {
+      margin-top: 4rem;
+      padding-top: 3.25rem;
+      border-top: 1px solid #dbdbdb;
+    }
+
+    .teleoperation-subtitle {
+      margin-bottom: 1.1rem !important;
+    }
+
     .task-tabs {
       display: flex;
       justify-content: center;
@@ -563,7 +587,7 @@
   <div class="container is-max-desktop">
     <div class="hero-body">
       <!-- TODO: Replace with your teaser video -->
-      <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
+      <video poster="" id="tree" class="viewport-autoplay-video" data-autoplay-when-visible="true" controls muted loop playsinline height="100%" preload="metadata">
         <!-- TODO: Add your video file path here -->
         <source src="static/videos/CoRL2.mp4" type="video/mp4">
       </video>
@@ -641,7 +665,7 @@
             </div>
             <h3 class="title is-4 pipeline-slide-title">Inference</h3>
             <p class="pipeline-description">
-              Overview of the Policy Inference Pipeline with Dynamics Consistency Guidance.
+              Dynamics-Guided Closed-Loop Inference is a real-time robust control mechanism that checks consistency between predicted and observed system dynamics. It encodes sensory input into latent states and uses a forward dynamics model to predict the next state given an action. If prediction matches observation within a threshold, the system updates using real data; otherwise, it switches to “Dynamics-Dream Mode”, generating future states autoregressively from the model to maintain stable, physically plausible control—especially under occlusion or sensing failure.
             </p>
           </article>
         </div>
@@ -664,131 +688,138 @@
 </section>
 <!-- End pipeline illustration carousel -->
 
-<!-- Simulator teleoperation videos -->
-<section class="section teleoperation-section" id="simulator-teleoperation">
+<!-- Teleoperation videos -->
+<section class="section teleoperation-group-section" id="teleoperation">
   <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Teleoperation in the simulator</h2>
+    <h2 class="title is-2 has-text-centered teleoperation-group-title">Teleoperation</h2>
 
-    <div class="task-tabs sim-task-tabs" role="tablist" aria-label="Simulator teleoperation tasks">
-      <button
-        class="task-tab sim-task-tab is-active"
-        type="button"
-        role="tab"
-        aria-selected="true"
-        data-left-video="static/videos/SimTask1_1.mp4"
-        data-right-video="static/videos/SimTask1_2.mp4">
-        Task1: Box
-      </button>
+    <!-- Simulator teleoperation -->
+    <div class="teleoperation-subsection" id="simulator-teleoperation">
+      <h3 class="title is-3 has-text-centered teleoperation-subtitle">Teleoperation in the simulator</h3>
 
-      <button
-        class="task-tab sim-task-tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
-        data-left-video="static/videos/SimTask2_1.mp4"
-        data-right-video="static/videos/SimTask2_2.mp4">
-        Task2: Driller
-      </button>
+      <div class="task-tabs sim-task-tabs" role="tablist" aria-label="Simulator teleoperation tasks">
+        <button
+          class="task-tab sim-task-tab is-active"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-left-video="static/videos/SimTask1_1.mp4"
+          data-right-video="static/videos/SimTask1_2.mp4">
+          Box
+        </button>
 
-      <button
-        class="task-tab sim-task-tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
-        data-left-video="static/videos/SimTask3_1.mp4"
-        data-right-video="static/videos/SimTask3_2.mp4">
-        Task3: Banana
-      </button>
-    </div>
+        <button
+          class="task-tab sim-task-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-left-video="static/videos/SimTask2_1.mp4"
+          data-right-video="static/videos/SimTask2_2.mp4">
+          Driller
+        </button>
 
-    <div class="sim-video-pair">
-      <div class="sim-video-frame">
-        <video
-          id="sim-video-left"
-          autoplay
-          controls
-          muted
-          loop
-          playsinline
-          preload="metadata"
-          aria-label="Left simulator teleoperation video">
-          <source src="static/videos/SimTask1_1.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+        <button
+          class="task-tab sim-task-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-left-video="static/videos/SimTask3_1.mp4"
+          data-right-video="static/videos/SimTask3_2.mp4">
+          Banana
+        </button>
       </div>
 
-      <div class="sim-video-frame">
-        <video
-          id="sim-video-right"
-          autoplay
-          controls
-          muted
-          loop
-          playsinline
-          preload="metadata"
-          aria-label="Right simulator teleoperation video">
-          <source src="static/videos/SimTask1_2.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+      <div class="sim-video-pair">
+        <div class="sim-video-frame">
+          <video
+            id="sim-video-left"
+            class="viewport-autoplay-video"
+            data-autoplay-when-visible="true"
+            controls
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label="Left simulator teleoperation video">
+            <source src="static/videos/SimTask1_1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="sim-video-frame">
+          <video
+            id="sim-video-right"
+            class="viewport-autoplay-video"
+            data-autoplay-when-visible="true"
+            controls
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label="Right simulator teleoperation video">
+            <source src="static/videos/SimTask1_2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
     </div>
+    <!-- End simulator teleoperation -->
+
+    <!-- Real-world teleoperation -->
+    <div class="teleoperation-subsection" id="realworld-teleoperation">
+      <h3 class="title is-3 has-text-centered teleoperation-subtitle">Teleoperation in the real-world</h3>
+
+      <div class="task-tabs real-task-tabs" role="tablist" aria-label="Real-world teleoperation tasks">
+        <button
+          class="task-tab real-task-tab is-active"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-video="static/videos/RealTask1.mp4">
+          Pick
+        </button>
+
+        <button
+          class="task-tab real-task-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-video="static/videos/RealTask2.mp4">
+          Pinch
+        </button>
+
+        <button
+          class="task-tab real-task-tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-video="static/videos/RealTask3.mp4">
+          Sweep
+        </button>
+      </div>
+
+      <div class="real-video-wrapper">
+        <div class="real-video-frame">
+          <video
+            id="real-video"
+            class="viewport-autoplay-video"
+            data-autoplay-when-visible="true"
+            controls
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label="Real-world teleoperation video">
+            <source src="static/videos/RealTask1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- End real-world teleoperation -->
   </div>
 </section>
-<!-- End simulator teleoperation videos -->
-
-<!-- Real-world teleoperation videos -->
-<section class="section hero is-light teleoperation-section" id="realworld-teleoperation">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Teleoperation in the real-world</h2>
-
-    <div class="task-tabs real-task-tabs" role="tablist" aria-label="Real-world teleoperation tasks">
-      <button
-        class="task-tab real-task-tab is-active"
-        type="button"
-        role="tab"
-        aria-selected="true"
-        data-video="static/videos/RealTask1.mp4">
-        Task1: Pick
-      </button>
-
-      <button
-        class="task-tab real-task-tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
-        data-video="static/videos/RealTask2.mp4">
-        Task2: Pinch
-      </button>
-
-      <button
-        class="task-tab real-task-tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
-        data-video="static/videos/RealTask3.mp4">
-        Task3: Sweep
-      </button>
-    </div>
-
-    <div class="real-video-wrapper">
-      <div class="real-video-frame">
-        <video
-          id="real-video"
-          autoplay
-          controls
-          muted
-          loop
-          playsinline
-          preload="metadata"
-          aria-label="Real-world teleoperation video">
-          <source src="static/videos/RealTask1.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End real-world teleoperation videos -->
+<!-- End teleoperation videos -->
 
 
 
@@ -824,21 +855,21 @@
       <div id="results-carousel" class="carousel results-carousel">
         <div class="item item-video1">
           <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video1" controls muted loop height="100%" preload="metadata">
+          <video poster="" id="video1" controls muted loop playsinline height="100%" preload="none">
             <!-- Your video file here -->
             <source src="static/videos/carousel1.mp4" type="video/mp4">
           </video>
         </div>
         <div class="item item-video2">
           <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video2" controls muted loop height="100%" preload="metadata">
+          <video poster="" id="video2" controls muted loop playsinline height="100%" preload="none">
             <!-- Your video file here -->
             <source src="static/videos/carousel2.mp4" type="video/mp4">
           </video>
         </div>
         <div class="item item-video3">
           <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video3" controls muted loop height="100%" preload="metadata">
+          <video poster="" id="video3" controls muted loop playsinline height="100%" preload="none">
             <!-- Your video file here -->
             <source src="static/videos/carousel3.mp4" type="video/mp4">
           </video>
@@ -920,6 +951,19 @@
   
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    function safePlay(videoElement) {
+      if (!videoElement || document.hidden) {
+        return;
+      }
+
+      const playPromise = videoElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function () {
+          // Autoplay can be blocked by browser policy; the controls remain available.
+        });
+      }
+    }
+
     function replaceVideo(videoElement, videoPath) {
       if (!videoElement || !videoPath) {
         return;
@@ -930,15 +974,20 @@
         return;
       }
 
+      /*
+       * Stop the current decode/download before assigning the next task video.
+       * This prevents inactive task videos from continuing to consume bandwidth
+       * or decoder resources after a tab switch.
+       */
       videoElement.pause();
+      sourceElement.removeAttribute('src');
+      videoElement.load();
+
       sourceElement.src = videoPath;
       videoElement.load();
 
-      const playPromise = videoElement.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function () {
-          // Autoplay may be blocked by the browser; controls remain available.
-        });
+      if (videoElement.dataset.isVisible === 'true') {
+        safePlay(videoElement);
       }
     }
 
@@ -949,6 +998,53 @@
         tab.setAttribute('aria-selected', String(isSelected));
       });
     }
+
+    /*
+     * Only play research videos while they are visible in the viewport.
+     * Videos below or above the current reading position stay paused, reducing
+     * simultaneous downloads, decoding load, GPU usage, and playback stutter.
+     */
+    const viewportVideos = Array.from(
+      document.querySelectorAll('video[data-autoplay-when-visible="true"]')
+    );
+
+    if ('IntersectionObserver' in window) {
+      const videoObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          const videoElement = entry.target;
+          const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.25;
+          videoElement.dataset.isVisible = String(isVisible);
+
+          if (isVisible) {
+            safePlay(videoElement);
+          } else {
+            videoElement.pause();
+          }
+        });
+      }, {
+        threshold: [0, 0.25, 0.6]
+      });
+
+      viewportVideos.forEach(function (videoElement) {
+        videoElement.dataset.isVisible = 'false';
+        videoObserver.observe(videoElement);
+      });
+    } else {
+      viewportVideos.forEach(function (videoElement) {
+        videoElement.dataset.isVisible = 'true';
+        safePlay(videoElement);
+      });
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      viewportVideos.forEach(function (videoElement) {
+        if (document.hidden) {
+          videoElement.pause();
+        } else if (videoElement.dataset.isVisible === 'true') {
+          safePlay(videoElement);
+        }
+      });
+    });
 
     // Simulator: switch the two side-by-side videos together.
     const simulatorTabs = document.querySelectorAll('.sim-task-tab');
