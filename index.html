@@ -735,8 +735,8 @@
           <h4 class="task-video-label">Box</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Simulator teleoperation: Box">
-                <source src="static/videos/SimTask1_1.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Simulator teleoperation: Box">
+                <source data-src="static/videos/SimTask1_1.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -747,8 +747,8 @@
           <h4 class="task-video-label">Driller</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Simulator teleoperation: Driller">
-                <source src="static/videos/SimTask2_1.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Simulator teleoperation: Driller">
+                <source data-src="static/videos/SimTask2_1.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -759,8 +759,8 @@
           <h4 class="task-video-label">Banana</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Simulator teleoperation: Banana">
-                <source src="static/videos/SimTask3_1.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Simulator teleoperation: Banana">
+                <source data-src="static/videos/SimTask3_1.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -779,8 +779,8 @@
           <h4 class="task-video-label">Pick</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Real-world teleoperation: Pick">
-                <source src="static/videos/Realtask1.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world teleoperation: Pick">
+                <source data-src="static/videos/Realtask1.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -791,8 +791,8 @@
           <h4 class="task-video-label">Pinch</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Real-world teleoperation: Pinch">
-                <source src="static/videos/Realtask2.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world teleoperation: Pinch">
+                <source data-src="static/videos/Realtask2.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -803,8 +803,8 @@
           <h4 class="task-video-label">Sweep</h4>
           <div class="task-video-stack">
             <div class="task-video-frame">
-              <video class="teleoperation-grid-video" controls muted loop playsinline preload="metadata" aria-label="Real-world teleoperation: Sweep">
-                <source src="static/videos/Realtask3.mp4" type="video/mp4">
+              <video class="teleoperation-grid-video benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Real-world teleoperation: Sweep">
+                <source data-src="static/videos/Realtask3.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -1221,11 +1221,10 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const teaserVideo = document.getElementById('tree');
-    const teleoperationVideos = Array.from(document.querySelectorAll('.teleoperation-grid-video'));
-    const autoplayVideos = [teaserVideo].concat(teleoperationVideos).filter(Boolean);
+    const autoplayVideos = [teaserVideo].filter(Boolean);
 
-    // Play only videos that are meaningfully visible and pause them immediately
-    // after they leave the viewport, limiting simultaneous decoding and bandwidth use.
+    // Keep automatic playback only for the main teaser video. Teleoperation and
+    // interaction-point-cloud videos are loaded lazily and play only after a click.
     if ('IntersectionObserver' in window) {
       const videoObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -1374,13 +1373,13 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const benchmarkVideos = Array.from(document.querySelectorAll('.benchmark-lazy-video'));
+    const manualPlayVideos = Array.from(document.querySelectorAll('.benchmark-lazy-video'));
 
-    if (!benchmarkVideos.length) {
+    if (!manualPlayVideos.length) {
       return;
     }
 
-    function loadBenchmarkVideo(video) {
+    function loadManualPlayVideo(video) {
       if (!video || video.dataset.loaded === 'true') {
         return;
       }
@@ -1404,7 +1403,7 @@
             return;
           }
 
-          loadBenchmarkVideo(entry.target);
+          loadManualPlayVideo(entry.target);
           observer.unobserve(entry.target);
         });
       }, {
@@ -1422,12 +1421,12 @@
         threshold: 0
       });
 
-      benchmarkVideos.forEach(function (video) {
+      manualPlayVideos.forEach(function (video) {
         loadObserver.observe(video);
         pauseObserver.observe(video);
       });
     } else {
-      benchmarkVideos.forEach(loadBenchmarkVideo);
+      manualPlayVideos.forEach(loadManualPlayVideo);
     }
 
     document.addEventListener('visibilitychange', function () {
@@ -1435,7 +1434,7 @@
         return;
       }
 
-      benchmarkVideos.forEach(function (video) {
+      manualPlayVideos.forEach(function (video) {
         if (!video.paused) {
           video.pause();
         }
