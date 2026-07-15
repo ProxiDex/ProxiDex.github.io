@@ -443,6 +443,45 @@
       transform: scale(1.25);
     }
 
+
+
+    /* Video loading and error feedback */
+    .sim-video-pair,
+    .real-video-frame {
+      position: relative;
+    }
+
+    .video-status-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.58);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .video-status-overlay.is-visible {
+      display: flex;
+    }
+
+    .video-status-overlay.is-error {
+      background: rgba(95, 10, 10, 0.82);
+      pointer-events: auto;
+    }
+
+    .sim-video-frame video,
+    .real-video-frame video {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
     @media screen and (max-width: 1024px) {
       .publication-title-two-lines {
         font-size: 2.45rem !important;
@@ -730,6 +769,9 @@
       </div>
 
       <div class="sim-video-pair">
+        <div class="video-status-overlay is-visible" id="sim-video-status" role="status" aria-live="polite">
+          Buffering both simulator views…
+        </div>
         <div class="sim-video-frame">
           <video
             id="sim-video-left"
@@ -739,7 +781,7 @@
             muted
             loop
             playsinline
-            preload="none"
+            preload="auto"
             aria-label="Left simulator teleoperation video">
             <source src="static/videos/SimTask1_1.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -755,7 +797,7 @@
             muted
             loop
             playsinline
-            preload="none"
+            preload="auto"
             aria-label="Right simulator teleoperation video">
             <source src="static/videos/SimTask1_2.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -775,7 +817,7 @@
           type="button"
           role="tab"
           aria-selected="true"
-          data-video="static/videos/RealTask1.mp4">
+          data-video="static/videos/Realtask1.mp4">
           Pick
         </button>
 
@@ -784,7 +826,7 @@
           type="button"
           role="tab"
           aria-selected="false"
-          data-video="static/videos/RealTask2.mp4">
+          data-video="static/videos/Realtask2.mp4">
           Pinch
         </button>
 
@@ -793,13 +835,16 @@
           type="button"
           role="tab"
           aria-selected="false"
-          data-video="static/videos/RealTask3.mp4">
+          data-video="static/videos/Realtask3.mp4">
           Sweep
         </button>
       </div>
 
       <div class="real-video-wrapper">
         <div class="real-video-frame">
+          <div class="video-status-overlay is-visible" id="real-video-status" role="status" aria-live="polite">
+            Loading real-world video…
+          </div>
           <video
             id="real-video"
             class="viewport-autoplay-video"
@@ -810,7 +855,7 @@
             playsinline
             preload="none"
             aria-label="Real-world teleoperation video">
-            <source src="static/videos/RealTask1.mp4" type="video/mp4">
+            <source data-src="static/videos/Realtask1.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
@@ -951,45 +996,26 @@
   
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    function safePlay(videoElement) {
-      if (!videoElement || document.hidden) {
-        return;
-      }
+    const BUFFER_SECONDS = 3.0;
 
-      const playPromise = videoElement.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function () {
-          // Autoplay can be blocked by browser policy; the controls remain available.
-        });
-      }
-    }
+    const simulatorSection = document.getElementById('simulator-teleoperation');
+    const realWorldSection = document.getElementById('realworld-teleoperation');
 
-    function replaceVideo(videoElement, videoPath) {
-      if (!videoElement || !videoPath) {
-        return;
-      }
+    const simulatorTabs = Array.from(document.querySelectorAll('.sim-task-tab'));
+    const realWorldTabs = Array.from(document.querySelectorAll('.real-task-tab'));
 
-      const sourceElement = videoElement.querySelector('source');
-      if (!sourceElement) {
-        return;
-      }
+    const leftSimulatorVideo = document.getElementById('sim-video-left');
+    const rightSimulatorVideo = document.getElementById('sim-video-right');
+    const realWorldVideo = document.getElementById('real-video');
 
-      /*
-       * Stop the current decode/download before assigning the next task video.
-       * This prevents inactive task videos from continuing to consume bandwidth
-       * or decoder resources after a tab switch.
-       */
-      videoElement.pause();
-      sourceElement.removeAttribute('src');
-      videoElement.load();
+    const simulatorStatus = document.getElementById('sim-video-status');
+    const realWorldStatus = document.getElementById('real-video-status');
 
-      sourceElement.src = videoPath;
-      videoElement.load();
-
-      if (videoElement.dataset.isVisible === 'true') {
-        safePlay(videoElement);
-      }
-    }
+    let simulatorVisible = false;
+    let realWorldVisible = false;
+    let simulatorShouldPlay = true;
+    let realWorldShouldPlay = true;
+    let internalPause = false;
 
     function activateTab(clickedTab, allTabs) {
       allTabs.forEach(function (tab) {
@@ -999,57 +1025,293 @@
       });
     }
 
-    /*
-     * Only play research videos while they are visible in the viewport.
-     * Videos below or above the current reading position stay paused, reducing
-     * simultaneous downloads, decoding load, GPU usage, and playback stutter.
-     */
-    const viewportVideos = Array.from(
-      document.querySelectorAll('video[data-autoplay-when-visible="true"]')
-    );
+    function setStatus(element, message, isError) {
+      if (!element) {
+        return;
+      }
 
-    if ('IntersectionObserver' in window) {
-      const videoObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          const videoElement = entry.target;
-          const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.25;
-          videoElement.dataset.isVisible = String(isVisible);
+      if (!message) {
+        element.classList.remove('is-visible', 'is-error');
+        element.textContent = '';
+        return;
+      }
 
-          if (isVisible) {
-            safePlay(videoElement);
-          } else {
-            videoElement.pause();
-          }
-        });
-      }, {
-        threshold: [0, 0.25, 0.6]
-      });
+      element.textContent = message;
+      element.classList.add('is-visible');
+      element.classList.toggle('is-error', Boolean(isError));
+    }
 
-      viewportVideos.forEach(function (videoElement) {
-        videoElement.dataset.isVisible = 'false';
-        videoObserver.observe(videoElement);
-      });
-    } else {
-      viewportVideos.forEach(function (videoElement) {
-        videoElement.dataset.isVisible = 'true';
-        safePlay(videoElement);
+    function sourceElement(videoElement) {
+      return videoElement ? videoElement.querySelector('source') : null;
+    }
+
+    function currentSource(videoElement) {
+      const source = sourceElement(videoElement);
+      return source ? (source.getAttribute('src') || '') : '';
+    }
+
+    function prepareVideo(videoElement, videoPath, preloadMode) {
+      if (!videoElement || !videoPath) {
+        return;
+      }
+
+      const source = sourceElement(videoElement);
+      if (!source) {
+        return;
+      }
+
+      if (currentSource(videoElement) === videoPath) {
+        videoElement.preload = preloadMode || 'auto';
+        return;
+      }
+
+      internalPause = true;
+      videoElement.pause();
+      internalPause = false;
+
+      source.removeAttribute('src');
+      videoElement.removeAttribute('src');
+      videoElement.load();
+
+      source.setAttribute('src', videoPath);
+      videoElement.preload = preloadMode || 'auto';
+      videoElement.load();
+    }
+
+    function releaseVideo(videoElement) {
+      if (!videoElement) {
+        return;
+      }
+
+      const source = sourceElement(videoElement);
+      internalPause = true;
+      videoElement.pause();
+      internalPause = false;
+
+      if (source) {
+        source.removeAttribute('src');
+      }
+      videoElement.removeAttribute('src');
+      videoElement.load();
+    }
+
+    function bufferedAhead(videoElement) {
+      if (!videoElement || !videoElement.buffered || videoElement.buffered.length === 0) {
+        return 0;
+      }
+
+      const currentTime = videoElement.currentTime || 0;
+      for (let i = 0; i < videoElement.buffered.length; i += 1) {
+        const start = videoElement.buffered.start(i);
+        const end = videoElement.buffered.end(i);
+        if (currentTime >= start && currentTime <= end) {
+          return Math.max(0, end - currentTime);
+        }
+      }
+      return 0;
+    }
+
+    function hasEnoughBuffer(videoElement) {
+      if (!videoElement || videoElement.error) {
+        return false;
+      }
+
+      if (Number.isFinite(videoElement.duration) && videoElement.duration > 0) {
+        const remaining = Math.max(0, videoElement.duration - videoElement.currentTime);
+        if (remaining <= 0.35) {
+          return true;
+        }
+      }
+
+      const remaining = Number.isFinite(videoElement.duration)
+        ? Math.max(0, videoElement.duration - videoElement.currentTime)
+        : BUFFER_SECONDS;
+      const requiredBuffer = Math.min(BUFFER_SECONDS, Math.max(0.5, remaining - 0.25));
+
+      return videoElement.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA &&
+        bufferedAhead(videoElement) >= requiredBuffer;
+    }
+
+    function safePlay(videoElement) {
+      if (!videoElement || document.hidden) {
+        return Promise.resolve();
+      }
+
+      const promise = videoElement.play();
+      return promise && typeof promise.catch === 'function'
+        ? promise.catch(function () {
+            // Muted inline playback normally succeeds; native controls remain available.
+          })
+        : Promise.resolve();
+    }
+
+    function pauseSimulatorPair() {
+      internalPause = true;
+      if (leftSimulatorVideo) leftSimulatorVideo.pause();
+      if (rightSimulatorVideo) rightSimulatorVideo.pause();
+      internalPause = false;
+    }
+
+    function activeSimulatorPaths() {
+      const activeTab = simulatorTabs.find(function (tab) {
+        return tab.classList.contains('is-active');
+      }) || simulatorTabs[0];
+
+      return activeTab ? {
+        left: activeTab.dataset.leftVideo,
+        right: activeTab.dataset.rightVideo
+      } : null;
+    }
+
+    function loadActiveSimulatorPair() {
+      const paths = activeSimulatorPaths();
+      if (!paths) {
+        return;
+      }
+
+      prepareVideo(leftSimulatorVideo, paths.left, 'auto');
+      prepareVideo(rightSimulatorVideo, paths.right, 'auto');
+      setStatus(simulatorStatus, 'Buffering both simulator views…', false);
+    }
+
+    function maybePlaySimulatorPair() {
+      if (!simulatorVisible || !simulatorShouldPlay || document.hidden) {
+        return;
+      }
+
+      if (!currentSource(leftSimulatorVideo) || !currentSource(rightSimulatorVideo)) {
+        loadActiveSimulatorPair();
+        return;
+      }
+
+      if (leftSimulatorVideo.error || rightSimulatorVideo.error) {
+        setStatus(
+          simulatorStatus,
+          'The simulator video could not be decoded. Please use MP4 with H.264 video and yuv420p pixel format.',
+          true
+        );
+        pauseSimulatorPair();
+        return;
+      }
+
+      if (!hasEnoughBuffer(leftSimulatorVideo) || !hasEnoughBuffer(rightSimulatorVideo)) {
+        setStatus(simulatorStatus, 'Buffering both simulator views…', false);
+        pauseSimulatorPair();
+        return;
+      }
+
+      // Start both views only after both have a safe buffer. This avoids one view
+      // running ahead while the other is still downloading.
+      const commonStart = Math.min(
+        leftSimulatorVideo.currentTime || 0,
+        rightSimulatorVideo.currentTime || 0
+      );
+
+      if (Math.abs((leftSimulatorVideo.currentTime || 0) - (rightSimulatorVideo.currentTime || 0)) > 0.35) {
+        leftSimulatorVideo.currentTime = commonStart;
+        rightSimulatorVideo.currentTime = commonStart;
+      }
+
+      Promise.all([
+        safePlay(leftSimulatorVideo),
+        safePlay(rightSimulatorVideo)
+      ]).then(function () {
+        setStatus(simulatorStatus, '', false);
       });
     }
 
-    document.addEventListener('visibilitychange', function () {
-      viewportVideos.forEach(function (videoElement) {
-        if (document.hidden) {
-          videoElement.pause();
-        } else if (videoElement.dataset.isVisible === 'true') {
-          safePlay(videoElement);
-        }
+    function activeRealWorldPath() {
+      const activeTab = realWorldTabs.find(function (tab) {
+        return tab.classList.contains('is-active');
+      }) || realWorldTabs[0];
+      return activeTab ? activeTab.dataset.video : '';
+    }
+
+    function loadActiveRealWorldVideo() {
+      const path = activeRealWorldPath();
+      if (!path) {
+        return;
+      }
+
+      prepareVideo(realWorldVideo, path, 'auto');
+      setStatus(realWorldStatus, 'Loading real-world video…', false);
+    }
+
+    function maybePlayRealWorldVideo() {
+      if (!realWorldVisible || !realWorldShouldPlay || document.hidden) {
+        return;
+      }
+
+      if (!currentSource(realWorldVideo)) {
+        loadActiveRealWorldVideo();
+        return;
+      }
+
+      if (realWorldVideo.error) {
+        const mediaCode = realWorldVideo.error.code;
+        const message = mediaCode === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+          ? 'This video format is not supported by the browser. Re-encode it as H.264 MP4 with yuv420p.'
+          : 'The real-world video failed to load. Please check the filename and network connection.';
+        setStatus(realWorldStatus, message, true);
+        return;
+      }
+
+      if (realWorldVideo.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
+        setStatus(realWorldStatus, 'Loading real-world video…', false);
+        return;
+      }
+
+      safePlay(realWorldVideo).then(function () {
+        setStatus(realWorldStatus, '', false);
       });
+    }
+
+    // Prebuffer the initial simulator pair while the reader is viewing the
+    // abstract/pipeline section. Only these two files are preloaded.
+    loadActiveSimulatorPair();
+
+    const simulatorEvents = ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough', 'progress', 'timeupdate'];
+    [leftSimulatorVideo, rightSimulatorVideo].forEach(function (videoElement) {
+      if (!videoElement) return;
+
+      simulatorEvents.forEach(function (eventName) {
+        videoElement.addEventListener(eventName, maybePlaySimulatorPair);
+      });
+
+      videoElement.addEventListener('waiting', function () {
+        if (!videoElement.paused) {
+          simulatorShouldPlay = true;
+        }
+        setStatus(simulatorStatus, 'Buffering both simulator views…', false);
+        pauseSimulatorPair();
+      });
+
+      videoElement.addEventListener('stalled', function () {
+        setStatus(simulatorStatus, 'Network is slow. Buffering both simulator views…', false);
+        pauseSimulatorPair();
+      });
+
+      videoElement.addEventListener('error', maybePlaySimulatorPair);
     });
 
-    // Simulator: switch the two side-by-side videos together.
-    const simulatorTabs = document.querySelectorAll('.sim-task-tab');
-    const leftSimulatorVideo = document.getElementById('sim-video-left');
-    const rightSimulatorVideo = document.getElementById('sim-video-right');
+    ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough', 'progress'].forEach(function (eventName) {
+      if (realWorldVideo) {
+        realWorldVideo.addEventListener(eventName, maybePlayRealWorldVideo);
+      }
+    });
+
+    if (realWorldVideo) {
+      realWorldVideo.addEventListener('waiting', function () {
+        setStatus(realWorldStatus, 'Buffering real-world video…', false);
+      });
+      realWorldVideo.addEventListener('stalled', function () {
+        setStatus(realWorldStatus, 'Network is slow. Buffering real-world video…', false);
+      });
+      realWorldVideo.addEventListener('playing', function () {
+        setStatus(realWorldStatus, '', false);
+      });
+      realWorldVideo.addEventListener('error', maybePlayRealWorldVideo);
+    }
 
     simulatorTabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
@@ -1058,14 +1320,13 @@
         }
 
         activateTab(tab, simulatorTabs);
-        replaceVideo(leftSimulatorVideo, tab.dataset.leftVideo);
-        replaceVideo(rightSimulatorVideo, tab.dataset.rightVideo);
+        simulatorShouldPlay = true;
+        prepareVideo(leftSimulatorVideo, tab.dataset.leftVideo, 'auto');
+        prepareVideo(rightSimulatorVideo, tab.dataset.rightVideo, 'auto');
+        setStatus(simulatorStatus, 'Buffering both simulator views…', false);
+        maybePlaySimulatorPair();
       });
     });
-
-    // Real world: switch the single task video.
-    const realWorldTabs = document.querySelectorAll('.real-task-tab');
-    const realWorldVideo = document.getElementById('real-video');
 
     realWorldTabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
@@ -1074,8 +1335,92 @@
         }
 
         activateTab(tab, realWorldTabs);
-        replaceVideo(realWorldVideo, tab.dataset.video);
+        realWorldShouldPlay = true;
+        prepareVideo(realWorldVideo, tab.dataset.video, 'auto');
+        setStatus(realWorldStatus, 'Loading real-world video…', false);
+        maybePlayRealWorldVideo();
       });
+    });
+
+    // Keep the teaser from decoding in the background after it leaves view.
+    const teaserVideo = document.getElementById('tree');
+    if (teaserVideo && 'IntersectionObserver' in window) {
+      const teaserObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+            safePlay(teaserVideo);
+          } else {
+            teaserVideo.pause();
+          }
+        });
+      }, { threshold: [0, 0.2] });
+      teaserObserver.observe(teaserVideo);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          const visible = entry.isIntersecting && entry.intersectionRatio >= 0.12;
+
+          if (entry.target === simulatorSection) {
+            simulatorVisible = visible;
+            if (visible && !realWorldVisible) {
+              // Stop the real-world stream so the simulator pair gets all bandwidth.
+              if (realWorldVideo) {
+                internalPause = true;
+                realWorldVideo.pause();
+                internalPause = false;
+              }
+              loadActiveSimulatorPair();
+              maybePlaySimulatorPair();
+            } else {
+              pauseSimulatorPair();
+            }
+          }
+
+          if (entry.target === realWorldSection) {
+            realWorldVisible = visible;
+            if (visible) {
+              // Cancel the two simulator downloads once the reader moves to the
+              // real-world subsection. This leaves one active media stream.
+              pauseSimulatorPair();
+              releaseVideo(leftSimulatorVideo);
+              releaseVideo(rightSimulatorVideo);
+              loadActiveRealWorldVideo();
+              maybePlayRealWorldVideo();
+            } else if (realWorldVideo) {
+              internalPause = true;
+              realWorldVideo.pause();
+              internalPause = false;
+
+              if (simulatorVisible) {
+                loadActiveSimulatorPair();
+                maybePlaySimulatorPair();
+              }
+            }
+          }
+        });
+      }, {
+        threshold: [0, 0.12, 0.45]
+      });
+
+      if (simulatorSection) sectionObserver.observe(simulatorSection);
+      if (realWorldSection) sectionObserver.observe(realWorldSection);
+    } else {
+      simulatorVisible = true;
+      loadActiveSimulatorPair();
+      maybePlaySimulatorPair();
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        pauseSimulatorPair();
+        if (realWorldVideo) realWorldVideo.pause();
+        if (teaserVideo) teaserVideo.pause();
+      } else {
+        maybePlaySimulatorPair();
+        maybePlayRealWorldVideo();
+      }
     });
   });
 </script>
