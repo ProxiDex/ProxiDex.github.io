@@ -69,7 +69,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
 
@@ -80,15 +79,11 @@
   <link rel="stylesheet" href="static/css/index.css">
   
   <!-- Non-critical CSS - Load asynchronously -->
-  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   
   <!-- Fallback for browsers that don't support preload -->
   <noscript>
-    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
-    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
     <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   </noscript>
@@ -98,10 +93,7 @@
   
   <!-- Defer non-critical JavaScript -->
   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script defer src="static/js/bulma-carousel.min.js"></script>
-  <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="static/js/index.js"></script>
   
   <!-- Structured Data for Academic Papers -->
@@ -650,82 +642,6 @@
     }
 
 
-    /* Performance in Domination video grid */
-    .domination-results-block {
-      max-width: 1400px;
-      margin: 4rem auto 0;
-      padding-top: 3.25rem;
-      border-top: 1px solid #d5d5d5;
-    }
-
-    .domination-results-title {
-      margin-bottom: 1.75rem !important;
-    }
-
-    .domination-grid-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      padding: 0.2rem 0 0.7rem;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .domination-grid {
-      display: grid;
-      gap: 1.15rem;
-      min-width: 1180px;
-    }
-
-    .domination-row {
-      display: grid;
-      grid-template-columns: 105px repeat(5, minmax(0, 1fr));
-      gap: 0.85rem;
-      align-items: center;
-    }
-
-    .domination-task-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      align-self: stretch;
-      min-height: 120px;
-      margin: 0;
-      padding: 0.75rem;
-      border-radius: 8px;
-      background: #ededed;
-      color: #2f2f2f;
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .domination-video-frame {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      overflow: hidden;
-      border-radius: 8px;
-      background: #000;
-      box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
-    }
-
-    .domination-video-frame video {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-    }
-
-    .domination-scroll-hint {
-      display: none;
-      margin-top: 0.45rem;
-      color: #7a7a7a;
-      font-size: 0.82rem;
-      text-align: center;
-    }
-
     @media screen and (max-width: 1024px) {
       .task-video-columns.is-three-columns,
       .task-video-columns.is-four-columns {
@@ -739,8 +655,7 @@
         font-size: 2rem !important;
       }
 
-      .simulation-results-title,
-      .domination-results-title {
+      .simulation-results-title {
         font-size: 1.55rem !important;
       }
 
@@ -750,8 +665,7 @@
         text-align: left;
       }
 
-      .results-scroll-hint,
-      .domination-scroll-hint {
+      .results-scroll-hint {
         display: block;
       }
 
@@ -763,32 +677,7 @@
 
   
 
-    /* Extended qualitative result video matrices */
-    .domination-method-header {
-      align-items: end;
-      margin-bottom: -0.25rem;
-    }
-
-    .domination-header-corner,
-    .domination-method-label {
-      margin: 0;
-      padding: 0.55rem 0.4rem;
-      color: #363636;
-      font-size: 0.96rem;
-      font-weight: 700;
-      line-height: 1.25;
-      text-align: center;
-    }
-
-    .domination-header-corner {
-      color: #6b6b6b;
-      font-size: 0.88rem;
-    }
-
-    .domination-method-label {
-      border-bottom: 2px solid #bdbdbd;
-    }
-
+    /* Qualitative result video matrices */
     .comparison-results-block {
       max-width: 1500px;
       margin: 4rem auto 0;
@@ -1531,123 +1420,6 @@
       <p class="results-scroll-hint" aria-hidden="true">Swipe horizontally to view the complete table.</p>
     </div>
 
-    <div class="domination-results-block" id="performance-in-domination">
-      <h3 class="title is-3 has-text-centered domination-results-title">Performance in Domination</h3>
-
-      <div class="domination-grid-wrapper" role="region" aria-label="Performance in Domination videos" tabindex="0">
-        <div class="domination-grid">
-          <div class="domination-row domination-method-header" aria-label="Compared methods">
-            <div class="domination-header-corner">Task</div>
-            <div class="domination-method-label">DP3</div>
-            <div class="domination-method-label">ManiFlow</div>
-            <div class="domination-method-label">AFRO</div>
-            <div class="domination-method-label">CordViP</div>
-            <div class="domination-method-label">ProxiDex</div>
-          </div>
-          <div class="domination-row">
-            <h4 class="domination-task-label">Pick</h4>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pick performance using DP3">
-            <source data-src="static/videos1/IDtask1-1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pick performance using ManiFlow">
-            <source data-src="static/videos1/IDtask1-2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pick performance using AFRO">
-            <source data-src="static/videos1/IDtask1-3.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pick performance using CordViP">
-            <source data-src="static/videos1/IDtask1-4.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pick performance using ProxiDex">
-            <source data-src="static/videos1/IDtask1-5.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-          </div>
-          <div class="domination-row">
-            <h4 class="domination-task-label">Pinch</h4>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pinch performance using DP3">
-            <source data-src="static/videos1/IDtask2-1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pinch performance using ManiFlow">
-            <source data-src="static/videos1/IDtask2-2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pinch performance using AFRO">
-            <source data-src="static/videos1/IDtask2-3.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pinch performance using CordViP">
-            <source data-src="static/videos1/IDtask2-4.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Pinch performance using ProxiDex">
-            <source data-src="static/videos1/IDtask2-5.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-          </div>
-          <div class="domination-row">
-            <h4 class="domination-task-label">Sweep</h4>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Sweep performance using DP3">
-            <source data-src="static/videos1/IDtask3-1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Sweep performance using ManiFlow">
-            <source data-src="static/videos1/IDtask3-2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Sweep performance using AFRO">
-            <source data-src="static/videos1/IDtask3-3.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Sweep performance using CordViP">
-            <source data-src="static/videos1/IDtask3-4.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="domination-video-frame">
-          <video class="benchmark-lazy-video" controls muted loop playsinline preload="none" aria-label="Sweep performance using ProxiDex">
-            <source data-src="static/videos1/IDtask3-5.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-          </div>
-        </div>
-      </div>
-      <p class="domination-scroll-hint" aria-hidden="true">Swipe horizontally to view all five methods in each task.</p>
-    </div>
-
     <div class="comparison-results-block" id="generalization-unseen-objects">
       <h3 class="title is-3 has-text-centered comparison-results-title">Generalization to Unseen Objects</h3>
 
@@ -2031,109 +1803,6 @@
   </div>
 </section>
 <!-- End quantitative results -->
-
-
-
-
-
-
-
-<!-- Youtube video -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <!-- Paper video. -->
-      <h2 class="title is-3">Video Presentation</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video">
-            <!-- TODO: Replace with your YouTube video ID -->
-            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End youtube video -->
-
-
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video1" controls muted loop playsinline height="100%" preload="none">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video2" controls muted loop playsinline height="100%" preload="none">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video3" controls muted loop playsinline height="100%" preload="none">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
-
-
-
-
-
-
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <!-- TODO: Replace with your poster PDF -->
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
-      </div>
-    </div>
-  </section>
-<!--End paper poster -->
-
-
-
-<!--BibTex citation -->
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <div class="bibtex-header">
-        <h2 class="title">BibTeX</h2>
-        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
-          <i class="fas fa-copy"></i>
-          <span class="copy-text">Copy</span>
-        </button>
-      </div>
-      <pre id="bibtex-code"><code>@article{YourPaperKey2024,
-  title={Your Paper Title Here},
-  author={First Author and Second Author and Third Author},
-  journal={Conference/Journal Name},
-  year={2024},
-  url={https://your-domain.com/your-project-page}
-}</code></pre>
-    </div>
-</section>
-<!--End BibTex citation -->
 
 
   <footer class="footer">
